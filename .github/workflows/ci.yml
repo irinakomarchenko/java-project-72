@@ -37,8 +37,8 @@ jobs:
 
       - uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./app
           push: true
-          cache-from: hexletcomponents/java-javalin-example:latest
+          cache-from: irinakomarchenko/java-project-72:latest
           cache-to: type=inline
-          tags: hexletcomponents/java-javalin-example:latest
+          tags: irinakomarchenko/java-project-72:latest

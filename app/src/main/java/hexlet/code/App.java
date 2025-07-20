@@ -7,6 +7,7 @@ import gg.jte.TemplateEngine;
 import gg.jte.resolve.ResourceCodeResolver;
 import io.javalin.Javalin;
 import lombok.extern.slf4j.Slf4j;
+import io.javalin.rendering.template.JavalinJte;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -67,6 +68,8 @@ public class App {
         var app = Javalin.create(config -> {
             config.bundledPlugins.enableDevLogging();
         });
+
+        JavalinJte.init(createTemplateEngine());
 
         return app;
 }

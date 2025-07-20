@@ -4,6 +4,7 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 plugins {
     application
     checkstyle
+    jacoco
     id("io.freefair.lombok") version "8.13.1"
     id("com.github.ben-manes.versions") version "0.52.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
@@ -11,6 +12,11 @@ plugins {
 
 application {
     mainClass.set("hexlet.code.App")
+}
+
+jacoco {
+    toolVersion = "0.8.9"
+    reportsDirectory = layout.buildDirectory.dir("reports/jacoco")
 }
 
 group = "hexlet.code"
@@ -28,23 +34,32 @@ dependencies {
     implementation("gg.jte:jte:3.2.0")
     implementation("org.slf4j:slf4j-simple:2.0.17")
     implementation("io.javalin:javalin:6.6.0")
-    //implementation("io.javalin:javalin-bundle:6.6.0")
-    //implementation("io.javalin:javalin-rendering:6.6.0")
+    implementation("io.javalin:javalin-bundle:6.6.0")
+    implementation("io.javalin:javalin-rendering:6.6.0")
+    implementation("org.postgresql:postgresql:42.7.6")
+    implementation("org.jsoup:jsoup:1.21.1")
+    implementation("com.konghq:unirest-java:4.0.0-RC2")
 
     testImplementation("org.assertj:assertj-core:3.27.3")
     testImplementation(platform("org.junit:junit-bom:5.12.2"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("com.squareup.okhttp3:mockwebserver:5.1.0")
 }
 
-tasks.test {
+tasks.named<Test>("test") {
     useJUnitPlatform()
-    // https://technology.lastminute.com/junit5-kotlin-and-gradle-dsl/
     testLogging {
+        events("failed", "skipped", "passed")
         exceptionFormat = TestExceptionFormat.FULL
-        events = mutableSetOf(TestLogEvent.FAILED, TestLogEvent.PASSED, TestLogEvent.SKIPPED)
-        // showStackTraces = true
-        // showCauses = true
-        showStandardStreams = true
+    }
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required = true
+        html.outputLocation = layout.buildDirectory.dir("reports/jacoco/test")
     }
 }

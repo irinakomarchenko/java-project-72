@@ -67,9 +67,10 @@ public class App {
 
         var app = Javalin.create(config -> {
             config.bundledPlugins.enableDevLogging();
+            config.fileRenderer(new JavalinJte(createTemplateEngine()));
+
         });
 
-        JavalinJte.init(createTemplateEngine());
 
         return app;
 }

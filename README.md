@@ -7,5 +7,5 @@
 
 ## 🚀 Деплой на Render
 
-[🌐 Открыть деплой](https://dashboard.render.com/web/srv-d1tmqebipnbc73cgkp3g/deploys/dep-d1tmqejipnbc73cgkpdg)
+[🌐 Открыть деплой](https://java-project-72-55ck.onrender.com/)
 

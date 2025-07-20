@@ -6,6 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="654d2732-9726-4f7c-a079-e544f7883c1f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/hexlet/code/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/hexlet/code/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/resources/templates/layout/schema.sql" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,7 +28,7 @@
             <expand>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="HexletJavalin" type="f1a62948:ProjectNode" />
+                <item name="app" type="f1a62948:ProjectNode" />
               </path>
             </expand>
             <select />
@@ -49,6 +52,9 @@
   &quot;associatedIndex&quot;: 0
 }</component>
   <component name="ProjectId" id="303504zRevxSmBFQi1nb0itPqhA" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="openDirectoriesWithSingleClick" value="true" />
@@ -70,6 +76,8 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\irina\GIT\java-project-72\app\src\main\resources\templates\layout" />
+      <recent name="C:\Users\irina\GIT\java-project-72\app\src\main\java\hexlet\code" />
       <recent name="C:\Users\irina\GIT\java-project-72\app\config" />
       <recent name="C:\Users\irina\GIT\java-project-72\app" />
     </key>

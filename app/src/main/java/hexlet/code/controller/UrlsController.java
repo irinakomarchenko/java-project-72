@@ -90,14 +90,14 @@ public class UrlsController {
         ctx.render("urls/show.jte", Collections.singletonMap("page", page));
 
     }
-        private static String normalizeUrl(String path) throws URISyntaxException, MalformedURLException {
-            var newPath = new URI(path).toURL();
-            return String.format("%s://%s", newPath.getProtocol(), newPath.getAuthority());
-        }
+    private static String normalizeUrl(String path) throws URISyntaxException, MalformedURLException {
+        var newPath = new URI(path).toURL();
+        return String.format("%s://%s", newPath.getProtocol(), newPath.getAuthority());
+    }
 
-        private static int getPage(int a, int b) {
-            return (a % b == 0) ? (a / b) : (a / b + 1);
-        }
+    private static int getPage(int a, int b) {
+        return (a % b == 0) ? (a / b) : (a / b + 1);
+    }
 
 }
 

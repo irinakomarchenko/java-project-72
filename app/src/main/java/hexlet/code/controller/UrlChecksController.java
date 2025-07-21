@@ -24,29 +24,31 @@ public class UrlChecksController {
 
         try {
             var response = Unirest.get(name).asString();
-            Document responseBody = Jsoup.parse(response.getBody());
-
             int statusCode = response.getStatus();
 
-            String h1 = responseBody.selectFirst("h1") != null
-                    ? responseBody.selectFirst("h1").text() : "";
+            if (statusCode == 200) {
+                Document responseBody = Jsoup.parse(response.getBody());
 
-            String title = responseBody.title();
+                String h1 = responseBody.selectFirst("h1") != null
+                        ? responseBody.selectFirst("h1").text() : "";
 
-            String description = !responseBody.select("meta[name=description]").isEmpty()
-                    ? responseBody.select("meta[name=description]").get(0).attr("content") : "";
+                String title = responseBody.title();
 
-            var createdAt = new Timestamp(System.currentTimeMillis());
+                String description = !responseBody.select("meta[name=description]").isEmpty()
+                        ? responseBody.select("meta[name=description]").get(0).attr("content") : "";
 
-            var urlCheck = new UrlCheck(statusCode, h1, title, description, createdAt);
-            urlCheck.setUrlId(urlId);
-            UrlCheckRepository.save(urlCheck);
+                var createdAt = new Timestamp(System.currentTimeMillis());
 
+                var urlCheck = new UrlCheck(statusCode, h1, title, description, createdAt);
+                urlCheck.setUrlId(urlId);
+                UrlCheckRepository.save(urlCheck);
+            }
             ctx.redirect(NamedRoutes.urlPath(urlId));
-        } catch (RuntimeException e) {
-            ctx.sessionAttribute("message", "Проверка не прошла");
+        } catch (Exception e) {
+            ctx.sessionAttribute("message", "The test failed");
             ctx.redirect(NamedRoutes.urlPath(urlId));
         }
+
     }
 }
 

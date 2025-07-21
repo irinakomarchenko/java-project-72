@@ -5,9 +5,14 @@ import com.zaxxer.hikari.HikariDataSource;
 import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
 import gg.jte.resolve.ResourceCodeResolver;
+import hexlet.code.controller.UrlChecksController;
+import hexlet.code.controller.UrlsController;
+import hexlet.code.repository.BaseRepository;
+import hexlet.code.util.NamedRoutes;
 import io.javalin.Javalin;
 import lombok.extern.slf4j.Slf4j;
 import io.javalin.rendering.template.JavalinJte;
+import org.postgresql.Driver;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -52,7 +57,7 @@ public class App {
         var hikariConfig = new HikariConfig();
         String databaseUrl = getDatabaseUrl();
         if (databaseUrl.contains("postgresql")) {
-            hikariConfig.setDriverClassName(org.postgresql.Driver.class.getName());
+            hikariConfig.setDriverClassName(Driver.class.getName());
         }
         hikariConfig.setJdbcUrl(databaseUrl);
 
@@ -65,12 +70,20 @@ public class App {
             statement.execute(sql);
         }
 
+        BaseRepository.dataSource = dataSource;
+
         var app = Javalin.create(config -> {
             config.bundledPlugins.enableDevLogging();
             config.fileRenderer(new JavalinJte(createTemplateEngine()));
-
         });
 
+        app.before(ctx -> ctx.contentType("text/html; charset=utf-8"));
+
+        app.get(NamedRoutes.rootPath(), UrlsController::build);
+        app.post(NamedRoutes.urlsPath(), UrlsController::create);
+        app.get(NamedRoutes.urlsPath(), UrlsController::index);
+        app.get(NamedRoutes.urlPath("{id}"), UrlsController::show);
+        app.post(NamedRoutes.urlCheckPath("{id}"), UrlChecksController::check);
 
         return app;
 }

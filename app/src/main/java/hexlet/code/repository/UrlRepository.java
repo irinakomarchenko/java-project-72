@@ -15,7 +15,7 @@ import static hexlet.code.repository.BaseRepository.dataSource;
 public class UrlRepository {
 
     public static void  save(Url url) throws SQLException {
-        var sql = "INSERT INTO urls (name, created_at, updated_at) VALUES (? ,?)";
+        var sql = "INSERT INTO urls (name, created_at) VALUES (? ,?)";
         try (var conn = dataSource.getConnection();
              var stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 

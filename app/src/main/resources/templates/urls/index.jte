@@ -40,7 +40,7 @@ content = @`
             <div class="mx-4 mt-4 mb-0">
                 @if(urls.isEmpty())
                     <div class="fs-4">
-                        Список пуст
+                        The list is empty
                     </div>
                 @else
                     <div class="container-lg mt-5 table-responsive">

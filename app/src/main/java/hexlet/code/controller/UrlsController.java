@@ -44,7 +44,7 @@ public class UrlsController {
             }
             ctx.redirect(NamedRoutes.urlsPath());
         } catch (IllegalArgumentException | URISyntaxException | MalformedURLException e) {
-            ctx.sessionAttribute("message", "Некорректный URL");
+            ctx.sessionAttribute("message", "Incorrect URL");
             ctx.redirect(NamedRoutes.rootPath());
         }
     }

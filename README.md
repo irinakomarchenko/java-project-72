@@ -59,5 +59,6 @@ app/
 [🌐 Открыть деплой](https://java-project-72-55ck.onrender.com/)
 
 ## Пример работы
-![Video_1](app/readme-resources/Video_1)
+[Смотреть видео на YouTube](https://youtu.be/QmdGfDcM--g)
+
 

@@ -54,6 +54,7 @@ public class App {
     }
 
     public static Javalin getApp() throws IOException, SQLException {
+
         var hikariConfig = new HikariConfig();
         String databaseUrl = getDatabaseUrl();
         if (databaseUrl.contains("postgresql")) {
@@ -86,7 +87,7 @@ public class App {
         app.post(NamedRoutes.urlCheckPath("{id}"), UrlChecksController::check);
 
         return app;
-}
+    }
 
     public static void main(String[] args) throws IOException, SQLException {
         var app = getApp();

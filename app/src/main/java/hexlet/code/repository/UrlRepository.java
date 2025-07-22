@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 import static hexlet.code.repository.BaseRepository.dataSource;
 
@@ -19,8 +21,11 @@ public class UrlRepository {
         try (var conn = dataSource.getConnection();
              var stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
+            if (url.getCreatedAt() == null) {
+                url.setCreatedAt(java.time.LocalDateTime.now());
+            }
             stmt.setString(1, url.getName());
-            stmt.setTimestamp(2, url.getCreatedAt());
+            stmt.setTimestamp(2, Timestamp.valueOf(url.getCreatedAt()));
             stmt.executeUpdate();
 
             var generatedKeys = stmt.getGeneratedKeys();
@@ -117,7 +122,7 @@ public class UrlRepository {
     private static Url getUrl(ResultSet resultSet) throws SQLException {
         var id = resultSet.getLong("id");
         var name = resultSet.getString("name");
-        var createdAt = resultSet.getTimestamp("created_at");
+        var createdAt = resultSet.getTimestamp("created_at").toLocalDateTime();
         return new Url(id, name, createdAt);
     }
 

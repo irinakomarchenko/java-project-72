@@ -16,9 +16,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class UrlsController {
 
@@ -30,23 +34,26 @@ public class UrlsController {
     }
 
     public static void create(Context ctx) throws SQLException {
+        String rawUrl = ctx.formParam("url");
+        String name;
         try {
-            var url = new  Url();
-            var name  = normalizeUrl(ctx.formParamAsClass("url", String.class).get());
-
-            if (UrlRepository.existsByName(name)) {
-                ctx.sessionAttribute("message", "URL already exists");
-            } else {
-                url.setName(name);
-                url.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-                UrlRepository.save(url);
-                ctx.sessionAttribute("message", "URL successfully created");
-            }
-            ctx.redirect(NamedRoutes.urlsPath());
+            name = normalizeUrl(rawUrl);
         } catch (IllegalArgumentException | URISyntaxException | MalformedURLException e) {
             ctx.sessionAttribute("message", "Incorrect URL");
             ctx.redirect(NamedRoutes.rootPath());
+            return;
         }
+
+        var url = new Url();
+        if (UrlRepository.existsByName(name)) {
+            ctx.sessionAttribute("message", "URL already exists");
+        } else {
+            url.setName(name);
+            url.setCreatedAt(LocalDateTime.now());
+            UrlRepository.save(url);
+            ctx.sessionAttribute("message", "URL successfully created");
+        }
+        ctx.redirect(NamedRoutes.urlsPath());
     }
 
     public static void index(Context ctx) throws SQLException {
@@ -61,11 +68,13 @@ public class UrlsController {
         } else if (!urls.isEmpty()) {
             urls = UrlRepository.getEntitiesPerPage(itemsPerPage, pageNumber);
 
+            List<Long> urlIds = urls.stream()
+                    .map(Url::getId)
+                    .collect(Collectors.toList());
+            Map<Long, UrlCheck> latestChecks = UrlCheckRepository.findLatestChecksByUrlIds(urlIds);
             Map<Url, UrlCheck> urlsWithLatestChecks = new HashMap<>();
             for (Url item : urls) {
-                var latestCheck = UrlCheckRepository.findLatestCheck(item.getId())
-                        .orElse(null);
-                urlsWithLatestChecks.put(item, latestCheck);
+                urlsWithLatestChecks.put(item, latestChecks.get(item.getId()));
             }
             page.setChecks(urlsWithLatestChecks);
             page.setPageNumber(pageNumber);
@@ -74,6 +83,13 @@ public class UrlsController {
 
         String message = ctx.consumeSessionAttribute("message");
         page.setMessage(message);
+        if (pageCount > 0) {
+            List<Integer> pages = IntStream.rangeClosed(1, pageCount)
+                    .boxed()
+                    .collect(Collectors.toList());
+            page.setPages(pages);
+        }
+
         ctx.render("urls/index.jte", Collections.singletonMap("page", page));
     }
 

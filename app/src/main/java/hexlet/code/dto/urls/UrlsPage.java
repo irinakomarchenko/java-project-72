@@ -17,4 +17,5 @@ public class UrlsPage extends BasePage {
     private List<Url> urls;
     private Map<Url, UrlCheck> checks;
     private int pageNumber;
+    private List<Integer> pages;
 }

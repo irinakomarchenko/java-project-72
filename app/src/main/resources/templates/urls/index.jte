@@ -2,7 +2,7 @@
 @import hexlet.code.util.NamedRoutes
 @import hexlet.code.dto.urls.UrlsPage
 @import org.apache.commons.lang3.StringUtils
-@import java.text.SimpleDateFormat
+@import java.time.format.DateTimeFormatter
 @param UrlsPage page
 
 @template.layout.page(
@@ -62,7 +62,7 @@ content = @`
 
                                     !{var latestCheck = page.getChecks().get(item);}
                                     @if(latestCheck != null)
-                                        <td>${new SimpleDateFormat("dd/MM/yy HH:mm").format(latestCheck.getCreatedAt())}</td>
+                                        <td>${latestCheck.getCreatedAt().format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm"))}</td>
                                         <td>${latestCheck.getStatusCode()}</td>
                                     @else
                                         <td></td>
@@ -76,7 +76,7 @@ content = @`
 
                     <div class="btn-toolbar position-relative text-light py-6 d-flex justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
                         <div class="btn-group me-2" role="group" aria-label="First group">
-                            @for(int i = 1; i <= page.getPageNumber(); i++)
+                            @for(Integer i : page.getPages())
                                 <a class="btn btn-success opacity-75" href="${NamedRoutes.urlsPath(i)}" role="button">${i}</a>
                             @endfor
                         </div>

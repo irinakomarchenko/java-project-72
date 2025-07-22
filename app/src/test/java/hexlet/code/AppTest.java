@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -122,12 +123,12 @@ public final class AppTest {
             assertThat(check.getH1()).isEqualTo("Hello, world!");
             assertThat(check.getTitle()).isEqualTo("Checking connection");
             assertThat(check.getDescription()).isEqualTo("Test page");
-            assertThat(check.getCreatedAt()).isBeforeOrEqualTo(new Date(System.currentTimeMillis()));
+            assertThat(check.getCreatedAt()).isBeforeOrEqualTo(LocalDateTime.now());
         });
     }
 
     @Test
-    void testUrlCheckFail() { // camelCase!
+    void testUrlCheckFail() {
         JavalinTest.test(app, (server, client) -> {
             var fakeWebsite = "http://localhost:9999";
             client.post("/urls", "url=" + fakeWebsite);

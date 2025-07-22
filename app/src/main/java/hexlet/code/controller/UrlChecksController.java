@@ -12,13 +12,14 @@ import org.jsoup.nodes.Document;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class UrlChecksController {
     public static void check(Context ctx) throws SQLException {
         var urlId = ctx.pathParamAsClass("id", Long.class).get();
 
         var url = UrlRepository.findById(urlId)
-                .orElseThrow(() -> new NotFoundResponse("URL not found"));
+                .orElseThrow(() -> new NotFoundResponse("Некорректный адрес"));
         var name  = url.getName();
 
 
@@ -37,7 +38,7 @@ public class UrlChecksController {
                 String description = !responseBody.select("meta[name=description]").isEmpty()
                         ? responseBody.select("meta[name=description]").get(0).attr("content") : "";
 
-                var createdAt = new Timestamp(System.currentTimeMillis());
+                var createdAt = LocalDateTime.now();
 
                 var urlCheck = new UrlCheck(statusCode, h1, title, description, createdAt);
                 urlCheck.setUrlId(urlId);
@@ -45,7 +46,7 @@ public class UrlChecksController {
             }
             ctx.redirect(NamedRoutes.urlPath(urlId));
         } catch (Exception e) {
-            ctx.sessionAttribute("message", "The test failed");
+            ctx.sessionAttribute("message", "Проверка не пройдена");
             ctx.redirect(NamedRoutes.urlPath(urlId));
         }
 

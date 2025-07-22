@@ -91,7 +91,8 @@ public class UrlCheckRepository extends BaseRepository {
             return new HashMap<>();
         }
         String inClause = urlIds.stream().map(id -> "?").collect(Collectors.joining(", "));
-        String sql = "SELECT DISTINCT ON (url_id) * FROM url_checks WHERE url_id IN (" + inClause + ") ORDER BY url_id, id DESC";
+        String sql = "SELECT DISTINCT ON (url_id) * FROM url_checks WHERE url_id IN (" + inClause + ") "
+                + "ORDER BY url_id, id DESC";
         try (var conn = dataSource.getConnection();
              var stmt = conn.prepareStatement(sql)) {
             int idx = 1;

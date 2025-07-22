@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.time.LocalDateTime;
 import java.sql.Timestamp;
 
 import static hexlet.code.repository.BaseRepository.dataSource;

@@ -64,8 +64,7 @@ content = @`
                     </tr>
                     </thead>
                     <tbody>
-                    @for(int i = checks.size() - 1; i >= 0; i--)
-                        !{var check = page.getChecks().get(i);}
+                    @for(var check : page.getChecks())
                         <tr>
                             <td>${check.getId()}</td>
                             <td>${check.getStatusCode()}</td>

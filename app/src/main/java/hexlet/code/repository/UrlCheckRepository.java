@@ -2,6 +2,7 @@ package hexlet.code.repository;
 
 import hexlet.code.model.UrlCheck;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
@@ -29,7 +30,7 @@ public class UrlCheckRepository extends BaseRepository {
             preparedStatement.setString(3, urlCheck.getH1());
             preparedStatement.setString(4, urlCheck.getTitle());
             preparedStatement.setString(5, urlCheck.getDescription());
-            preparedStatement.setTimestamp(6, Timestamp.valueOf(urlCheck.getCreatedAt()));
+            preparedStatement.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
             preparedStatement.executeUpdate();
 
             var generatedKeys = preparedStatement.getGeneratedKeys();
@@ -50,18 +51,8 @@ public class UrlCheckRepository extends BaseRepository {
             var resultSet = stmt.executeQuery();
 
             var results = new ArrayList<UrlCheck>();
-            var currentListId = 1L;
-
             while (resultSet.next()) {
-                var statusCode = resultSet.getInt("status_code");
-                var h1 = resultSet.getString("h1");
-                var title = resultSet.getString("title");
-                var description = resultSet.getString("description");
-                var createdAt = resultSet.getTimestamp("created_at").toLocalDateTime();
-                var urlCheck = new UrlCheck(statusCode, h1, title, description, createdAt);
-                urlCheck.setId(currentListId);
-
-                currentListId++;
+                var urlCheck = mapRowToUrlCheck(resultSet);
                 results.add(urlCheck);
             }
             return results;
@@ -77,9 +68,7 @@ public class UrlCheckRepository extends BaseRepository {
             var resultSet = stmt.executeQuery();
 
             if (resultSet.next()) {
-                var statusCode = resultSet.getInt("status_code");
-                var createdAt = resultSet.getTimestamp("created_at").toLocalDateTime();
-                var check = new UrlCheck(statusCode, createdAt);
+                var check = mapRowToUrlCheck(resultSet);
                 return Optional.of(check);
             }
             return Optional.empty();
@@ -102,20 +91,24 @@ public class UrlCheckRepository extends BaseRepository {
             var resultSet = stmt.executeQuery();
             var result = new HashMap<Long, UrlCheck>();
             while (resultSet.next()) {
-                var id = resultSet.getLong("id");
-                var urlId = resultSet.getLong("url_id");
-                var statusCode = resultSet.getInt("status_code");
-                var h1 = resultSet.getString("h1");
-                var title = resultSet.getString("title");
-                var description = resultSet.getString("description");
-                var createdAt = resultSet.getTimestamp("created_at").toLocalDateTime();
-                var check = new UrlCheck(statusCode, h1, title, description, createdAt);
-                check.setId(id);
-                check.setUrlId(urlId);
-                check.setCreatedAt(createdAt);
-                result.put(urlId, check);
+                var check = mapRowToUrlCheck(resultSet);
+                Long urlIdFromDb = check.getUrlId();
+                result.put(check.getUrlId(), check);
             }
             return result;
         }
+    }
+
+    private static UrlCheck mapRowToUrlCheck(ResultSet rs) throws SQLException {
+        var check = new UrlCheck(
+                rs.getInt("status_code"),
+                rs.getString("h1"),
+                rs.getString("title"),
+                rs.getString("description"),
+                rs.getTimestamp("created_at").toLocalDateTime()
+        );
+        check.setId(rs.getLong("id"));
+        check.setUrlId(rs.getLong("url_id"));
+        return check;
     }
 }

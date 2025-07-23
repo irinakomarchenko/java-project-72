@@ -122,7 +122,11 @@ public class UrlRepository {
         var id = resultSet.getLong("id");
         var name = resultSet.getString("name");
         var createdAt = resultSet.getTimestamp("created_at").toLocalDateTime();
-        return new Url(id, name, createdAt);
+
+        Url url = new Url(name);
+        url.setId(id);
+        url.setCreatedAt(createdAt);
+        return url;
     }
 
 }

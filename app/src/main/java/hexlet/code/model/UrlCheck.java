@@ -23,9 +23,4 @@ public class UrlCheck {
         this.description = description;
         this.createdAt = createdAt;
     }
-
-    public UrlCheck(int statusCode, LocalDateTime createdAt) {
-        this.statusCode = statusCode;
-        this.createdAt = createdAt;
-    }
 }

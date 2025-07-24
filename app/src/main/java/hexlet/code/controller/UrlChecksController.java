@@ -42,6 +42,7 @@ public class UrlChecksController {
                 var urlCheck = new UrlCheck(statusCode, h1, title, description, createdAt);
                 urlCheck.setUrlId(urlId);
                 UrlCheckRepository.save(urlCheck);
+                System.out.println("[DEBUG] Сохранили новую проверку для urlId=" + urlId);
             }
             ctx.redirect(NamedRoutes.urlPath(urlId));
         } catch (Exception e) {

@@ -18,6 +18,11 @@ import java.time.LocalDateTime;
 public class UrlCheckRepository extends BaseRepository {
 
     public static void save(UrlCheck urlCheck) throws SQLException {
+        System.out.println("[DEBUG] Сохраняем UrlCheck: urlId=" + urlCheck.getUrlId()
+                + ", status=" + urlCheck.getStatusCode()
+                + ", title=" + urlCheck.getTitle()
+                + ", h1=" + urlCheck.getH1());
+
         var sql = "INSERT INTO url_checks (url_id, status_code, h1, title, description, created_at) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
         try (var conn = dataSource.getConnection();
@@ -30,19 +35,27 @@ public class UrlCheckRepository extends BaseRepository {
             preparedStatement.setString(3, urlCheck.getH1());
             preparedStatement.setString(4, urlCheck.getTitle());
             preparedStatement.setString(5, urlCheck.getDescription());
-            preparedStatement.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
+            preparedStatement.setTimestamp(6, Timestamp.valueOf(urlCheck.getCreatedAt()));
             preparedStatement.executeUpdate();
+
+            int updated = preparedStatement.executeUpdate();
+            System.out.println("[DEBUG] executeUpdate вернул: " + updated);
 
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 urlCheck.setId(generatedKeys.getLong(1));
+                System.out.println("[DEBUG] Сохранено с id=" + urlCheck.getId());
             } else {
                 throw new SQLException("Не сформирован ID");
             }
+        } catch (SQLException ex) {
+            System.out.println("[DEBUG][ERROR] При сохранении проверки: " + ex.getMessage());
+            throw ex;
         }
     }
 
     public static List<UrlCheck> find(Long urlId) throws SQLException {
+        System.out.println("[DEBUG] Запрашиваем проверки для urlId=" + urlId);
         var sql = "SELECT * FROM url_checks WHERE url_id = ?";
         try (var conn = dataSource.getConnection();
              var stmt = conn.prepareStatement(sql)) {
@@ -55,6 +68,7 @@ public class UrlCheckRepository extends BaseRepository {
                 var urlCheck = mapRowToUrlCheck(resultSet);
                 results.add(urlCheck);
             }
+            System.out.println("[DEBUG] Найдено " + results.size() + " проверок");
             return results;
         }
     }

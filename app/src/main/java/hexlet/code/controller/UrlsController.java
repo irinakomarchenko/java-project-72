@@ -71,11 +71,7 @@ public class UrlsController {
                     .map(Url::getId)
                     .collect(Collectors.toList());
             Map<Long, UrlCheck> latestChecks = UrlCheckRepository.findLatestChecksByUrlIds(urlIds);
-            Map<Url, UrlCheck> urlsWithLatestChecks = new HashMap<>();
-            for (Url item : urls) {
-                urlsWithLatestChecks.put(item, latestChecks.get(item.getId()));
-            }
-            page.setChecks(urlsWithLatestChecks);
+            page.setChecks(latestChecks);
             page.setPageNumber(pageNumber);
         }
         page.setUrls(urls);
@@ -97,6 +93,7 @@ public class UrlsController {
         var url = UrlRepository.findById(id)
                 .orElseThrow(() -> new NotFoundResponse("URL not found"));
         var checks = UrlCheckRepository.find(id);
+        System.out.println("[DEBUG] checks.size() = " + checks.size());
 
         var page = new UrlPage(url, checks);
         String message = ctx.consumeSessionAttribute("message");

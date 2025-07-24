@@ -60,7 +60,7 @@ content = @`
                                     <td>${item.getId()}</td>
                                     <td><a href="${NamedRoutes.urlPath(item.getId())}">${item.getName()}</a></td>
 
-                                    !{var latestCheck = page.getChecks().get(item);}
+                                    !{var latestCheck = page.getChecks().get(item.getId());}
                                     @if(latestCheck != null)
                                         <td>${latestCheck.getCreatedAt().format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm"))}</td>
                                         <td>${latestCheck.getStatusCode()}</td>

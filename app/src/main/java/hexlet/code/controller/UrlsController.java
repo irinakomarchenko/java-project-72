@@ -17,7 +17,6 @@ import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -97,6 +96,7 @@ public class UrlsController {
 
         var page = new UrlPage(url, checks);
         String message = ctx.consumeSessionAttribute("message");
+        System.out.println("[DEBUG] message in show = " + message);
         page.setMessage(message);
 
         ctx.render("urls/show.jte", Collections.singletonMap("page", page));

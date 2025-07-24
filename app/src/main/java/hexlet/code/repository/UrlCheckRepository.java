@@ -118,9 +118,9 @@ public class UrlCheckRepository extends BaseRepository {
                 rs.getInt("status_code"),
                 rs.getString("h1"),
                 rs.getString("title"),
-                rs.getString("description"),
-                rs.getTimestamp("created_at").toLocalDateTime()
+                rs.getString("description")
         );
+        check.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
         check.setId(rs.getLong("id"));
         check.setUrlId(rs.getLong("url_id"));
         return check;

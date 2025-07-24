@@ -39,7 +39,7 @@ public class UrlChecksController {
 
                 var createdAt = LocalDateTime.now();
 
-                var urlCheck = new UrlCheck(statusCode, h1, title, description, createdAt);
+                var urlCheck = new UrlCheck(statusCode, h1, title, description);
                 urlCheck.setUrlId(urlId);
                 UrlCheckRepository.save(urlCheck);
                 System.out.println("[DEBUG] Сохранили новую проверку для urlId=" + urlId);

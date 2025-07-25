@@ -59,6 +59,10 @@ app/
 [🌐 Открыть деплой](https://java-project-72-55ck.onrender.com/)
 
 ## Пример работы
-[Смотреть видео на YouTube](https://youtu.be/QmdGfDcM--g)
+[Смотреть видео на YouTube](https://youtu.be/bHulXUoTi-8)
 
-
+### Вывод списка страниц и их статусов
+![img_1.png](app/readme-resources/img_1.png)
+![img_2.png](app/readme-resources/img_2.png)
+![img_3.png](app/readme-resources/img_3.png)
+![img_4.png](app/readme-resources/img_4.png)

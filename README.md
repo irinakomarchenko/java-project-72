@@ -56,7 +56,7 @@ app/
 
 ## 🚀 Деплой на Render
 
-[🌐 Открыть деплой](https://java-project-72-55ck.onrender.com/)
+[🌐 Открыть деплой](https://java-project-72-55ck.onrender.com)
 
 ## Пример работы
 [Смотреть видео на YouTube](https://youtu.be/bHulXUoTi-8)

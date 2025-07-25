@@ -27,12 +27,25 @@ public class UrlChecksController {
                     .asString();
 
             int statusCode = response.getStatus();
+            String body = response.getBody();
+
+            if (statusCode >= 300 && statusCode < 400) {
+                String redirectUrl = response.getHeaders().getFirst("Location");
+                if (redirectUrl != null && !redirectUrl.isEmpty()) {
+                    response = Unirest.get(redirectUrl)
+                            .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+                            .asString();
+                    statusCode = response.getStatus();
+                    body = response.getBody();
+                }
+            }
+
             String h1 = "";
             String title = "";
             String description = "";
 
-            if (statusCode == 200) {
-                var doc = Jsoup.parse(response.getBody());
+            if (body != null && !body.isEmpty()) {
+                var doc = Jsoup.parse(body);
                 var h1El = doc.selectFirst("h1");
                 var descEl = doc.selectFirst("meta[name~=(?i)description]");
 

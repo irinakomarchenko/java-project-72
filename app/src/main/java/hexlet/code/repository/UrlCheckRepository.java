@@ -38,9 +38,6 @@ public class UrlCheckRepository extends BaseRepository {
             preparedStatement.setTimestamp(6, Timestamp.valueOf(urlCheck.getCreatedAt()));
             preparedStatement.executeUpdate();
 
-            int updated = preparedStatement.executeUpdate();
-            System.out.println("[DEBUG] executeUpdate вернул: " + updated);
-
             var generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
                 urlCheck.setId(generatedKeys.getLong(1));

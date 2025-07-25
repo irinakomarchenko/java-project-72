@@ -8,10 +8,9 @@ import io.javalin.http.Context;
 import io.javalin.http.NotFoundResponse;
 import kong.unirest.Unirest;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import java.sql.SQLException;
-import java.time.LocalDateTime;
+
 
 public class UrlChecksController {
     public static void check(Context ctx) throws SQLException {
@@ -23,33 +22,43 @@ public class UrlChecksController {
 
 
         try {
-            var response = Unirest.get(name).asString();
+            var response = Unirest.get(name)
+                    .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+                    .asString();
+
             int statusCode = response.getStatus();
+            String h1 = "";
+            String title = "";
+            String description = "";
 
             if (statusCode == 200) {
-                Document responseBody = Jsoup.parse(response.getBody());
+                var doc = Jsoup.parse(response.getBody());
+                var h1El = doc.selectFirst("h1");
+                var descEl = doc.selectFirst("meta[name~=(?i)description]");
 
-                String h1 = responseBody.selectFirst("h1") != null
-                        ? responseBody.selectFirst("h1").text() : "";
-
-                String title = responseBody.title();
-
-                String description = !responseBody.select("meta[name=description]").isEmpty()
-                        ? responseBody.select("meta[name=description]").get(0).attr("content") : "";
-
-                var createdAt = LocalDateTime.now();
-
-                var urlCheck = new UrlCheck(statusCode, h1, title, description);
-                urlCheck.setUrlId(urlId);
-                UrlCheckRepository.save(urlCheck);
-                System.out.println("[DEBUG] Сохранили новую проверку для urlId=" + urlId);
+                h1 = h1El != null ? h1El.text() : "";
+                title = doc.title();
+                description = descEl != null ? descEl.attr("content") : "";
             }
-            ctx.redirect(NamedRoutes.urlPath(urlId));
+
+            var check = new UrlCheck(statusCode, h1, title, description);
+            check.setUrlId(urlId);
+            UrlCheckRepository.save(check);
+
+            boolean incomplete = statusCode != 200 || title.isEmpty() || h1.isEmpty() || description.isEmpty();
+            if (incomplete) {
+                ctx.sessionAttribute("message", "Проверка выполнена, но не удалось получить все данные "
+                        + "(код " + statusCode + ")");
+            } else {
+                ctx.sessionAttribute("message", "Проверка выполнена успешно (код " + statusCode + ")");
+            }
+
         } catch (Exception e) {
-            ctx.sessionAttribute("message", "Проверка не пройдена");
-            ctx.redirect(NamedRoutes.urlPath(urlId));
+            System.out.println("[ERROR] Проверка не выполнена: " + e.getMessage());
+            ctx.sessionAttribute("message", "Проверка не пройдена: " + e.getMessage());
         }
 
+        ctx.redirect(NamedRoutes.urlPath(urlId));
     }
 }
 
